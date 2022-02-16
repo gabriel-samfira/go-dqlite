@@ -25,12 +25,12 @@ static int dupCloexec(int oldfd) {
 	if (newfd < 0) {
 		return -1;
 	}
-
+	#if !defined(_WIN32)
 	if (fcntl(newfd, F_SETFD, FD_CLOEXEC) < 0) {
 		close(newfd);
 		return -1;
 	}
-
+	#endif
 	return newfd;
 }
 
@@ -90,12 +90,6 @@ type Node C.dqlite_node
 type SnapshotParams struct {
 	Threshold uint64
 	Trailing  uint64
-}
-
-// Initializes state.
-func init() {
-	// FIXME: ignore SIGPIPE, see https://github.com/joyent/libuv/issues/1254
-	C.signal(C.SIGPIPE, C.SIG_IGN)
 }
 
 func ConfigSingleThread() error {

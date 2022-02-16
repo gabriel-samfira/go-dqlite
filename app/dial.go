@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 	"crypto/tls"
-	"fmt"
+	//"fmt"
 	"net"
 
 	"github.com/canonical/go-dqlite/client"
@@ -27,14 +27,15 @@ func makeNodeDialFunc(config *tls.Config) client.DialFunc {
 		if err != nil {
 			return nil, err
 		}
-		goUnix, cUnix, err := socketpair()
-		if err != nil {
-			return nil, fmt.Errorf("create pair of Unix sockets: %w", err)
-		}
+		//goUnix, cUnix, err := socketpair()
+		//if err != nil {
+		//	return nil, fmt.Errorf("create pair of Unix sockets: %w", err)
+		//}
 
-		go proxy(context.Background(), conn, goUnix, clonedConfig)
+		//go proxy(context.Background(), conn, goUnix, clonedConfig)
 
-		return cUnix, nil
+		//return cUnix, nil
+		return conn, nil
 	}
 
 	return dial
@@ -44,18 +45,19 @@ func makeNodeDialFunc(config *tls.Config) client.DialFunc {
 // and forth between the remote connection and a local unix socket.
 func extDialFuncWithProxy(dialFunc client.DialFunc) client.DialFunc {
 	return func(ctx context.Context, addr string) (net.Conn, error) {
-		goUnix, cUnix, err := socketpair()
-		if err != nil {
-			return nil, fmt.Errorf("create pair of Unix sockets: %w", err)
-		}
+		//goUnix, cUnix, err := socketpair()
+		//if err != nil {
+		//	return nil, fmt.Errorf("create pair of Unix sockets: %w", err)
+		//}
 
 		conn, err := dialFunc(ctx, addr)
 		if err != nil {
 			return nil, err
 		}
 
-		go proxy(context.Background(), conn, goUnix, nil)
+		//go proxy(context.Background(), conn, goUnix, nil)
 
-		return cUnix, nil
+		//return cUnix, nil
+		return conn, nil
 	}
 }

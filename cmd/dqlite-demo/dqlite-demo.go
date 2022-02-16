@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"syscall"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -16,7 +17,7 @@ import (
 	"github.com/canonical/go-dqlite/client"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"golang.org/x/sys/unix"
+//	"golang.org/x/sys/unix"
 )
 
 func main() {
@@ -92,10 +93,10 @@ Complete documentation is available at https://github.com/canonical/go-dqlite`,
 			go http.Serve(listener, nil)
 
 			ch := make(chan os.Signal)
-			signal.Notify(ch, unix.SIGPWR)
-			signal.Notify(ch, unix.SIGINT)
-			signal.Notify(ch, unix.SIGQUIT)
-			signal.Notify(ch, unix.SIGTERM)
+			//signal.Notify(ch, unix.SIGPWR)
+			//signal.Notify(ch, unix.SIGINT)
+			//signal.Notify(ch, unix.SIGQUIT)
+			signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
 
 			<-ch
 

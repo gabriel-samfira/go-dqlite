@@ -8,11 +8,11 @@ import (
 	"net"
 	"os"
 	"reflect"
-	"syscall"
+	//"syscall"
 	"time"
 	"unsafe"
 
-	"golang.org/x/sys/unix"
+	//"golang.org/x/sys/unix"
 )
 
 // Copies data between a remote TCP network connection (possibly with TLS) and
@@ -140,11 +140,12 @@ func setKeepalive(conn *net.TCPConn) error {
 		return err
 	}
 
-	raw, err := conn.SyscallConn()
-	if err != nil {
-		return err
-	}
+	//raw, err := conn.SyscallConn()
+	//if err != nil {
+	//	return err
+	//}
 
+	/*
 	raw.Control(
 		func(ptr uintptr) {
 			fd := int(ptr)
@@ -172,9 +173,10 @@ func setKeepalive(conn *net.TCPConn) error {
 				return
 			}
 		})
+		*/
 	return err
 }
-
+/*
 // Returns a pair of connected unix sockets.
 func socketpair() (net.Conn, net.Conn, error) {
 	fds, err := syscall.Socketpair(syscall.AF_LOCAL, syscall.SOCK_STREAM, 0)
@@ -195,7 +197,7 @@ func socketpair() (net.Conn, net.Conn, error) {
 
 	return c1, c2, err
 }
-
+*/
 func fdToFileConn(fd int) (net.Conn, error) {
 	f := os.NewFile(uintptr(fd), "")
 	defer f.Close()
